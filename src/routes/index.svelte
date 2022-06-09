@@ -1,10 +1,31 @@
+<script lang="ts" context="module">
+	import type { PokemonDetails } from '../shared/interfaces/pokemonDetails.svelte';
+	// Equivalent du getStaticProps dans Next.js
+	export async function load() {
+		const res = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=151`);
+		const data = await res.json();
+		const loadedPokemons = data.results.map((pokemon: PokemonDetails, index: number) => {
+			return {
+				id: index + 1,
+				name: pokemon.name,
+				image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
+					index + 1
+				}.png`
+			};
+		});
+		console.log('LOADED', loadedPokemons);
+		return { props: { pokemons: loadedPokemons } };
+	}
+</script>
+
 <script lang="ts">
 	interface Pokemon {
 		id: number;
 		image: string;
 		name: string;
 	}
-	import { pokemons } from '../stores/pokestore';
+	// import { pokemons } from '../stores/pokestore';
+	export let pokemons: Array<Pokemon>;
 	import Card from '../components/Card.svelte';
 	// Le $ sert à avoir accès à la data (et la voir la donnée dans la console)
 	let searchTerm = '';
@@ -12,12 +33,14 @@
 
 	$: {
 		if (searchTerm) {
-			filteredPokemons = $pokemons.filter((pokemon: Pokemon) =>
+			console.log(searchTerm);
+			filteredPokemons = pokemons.filter((pokemon: Pokemon) =>
 				pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
 			);
+			console.log(filteredPokemons);
 		} else {
 			// filteredPokemons = [...$pokemons];
-			filteredPokemons = $pokemons;
+			filteredPokemons = pokemons;
 		}
 	}
 </script>
@@ -32,7 +55,7 @@
 />
 
 <svelte:head>
-	<title>About Pokedex</title>
+	<title>Pokedex</title>
 </svelte:head>
 
 <!-- Remplace map -->

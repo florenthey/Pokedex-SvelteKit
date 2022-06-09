@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	// Equivalent du getStaticProps dans Next.js
-	export async function load({ url, params }: any) {
+	export async function load({ params }: any) {
 		const id = params.id;
 		const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
 		const pokemon = await res.json();
@@ -9,23 +9,9 @@
 </script>
 
 <script lang="ts">
-	interface PokemonDetails {
-		id: number;
-		image: string;
-		name: string;
-		types: Array<{ slot: number; type: { name: string } }>;
-		height: number;
-		weight: number;
-		abilities: Array<string>;
-		sprites: {
-			front_default: string;
-		};
-		stats: Array<{
-			name: string;
-			value: number;
-		}>;
-	}
+	import type { PokemonDetails } from '../../shared/interfaces/pokemonDetails.svelte';
 	export let pokemon: PokemonDetails;
+	console.log(pokemon);
 	const type = pokemon.types[0].type.name;
 </script>
 
