@@ -1,9 +1,9 @@
 <script lang="ts" context="module">
 	// Equivalent du getStaticProps dans Next.js
+	import { getPokemon } from '../../pokestore.svelte';
 	export async function load({ params }: any) {
-		const id = params.id;
-		const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-		const pokemon = await res.json();
+		let id = params.id;
+		const pokemon = await getPokemon(id);
 		return { props: { pokemon } };
 	}
 </script>
@@ -11,7 +11,6 @@
 <script lang="ts">
 	import type { PokemonDetails } from '../../shared/interfaces/pokemonDetails.svelte';
 	export let pokemon: PokemonDetails;
-	console.log(pokemon);
 	const type = pokemon.types[0].type.name;
 </script>
 
